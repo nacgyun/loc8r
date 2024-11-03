@@ -54,25 +54,35 @@ const homelist = (req, res) => {
     const requestOptions = {
         url: `${apiOptions.server}${path}`,
         method: 'GET',
-        json:{},
+        json: {},
         qs: {
             lng: 126.955467,
             lat: 37.322347,
             maxDistance: 200000
         }
     };
-    request(
-        requestOptions, (err,{statusCode}, body) => {
-            let data = [];
-            if (statusCode===200 && body.length){
-                data = body.map( (item) => {
+
+    request(requestOptions, (err, response, body) => {
+        if (err) {
+            console.error("Request error:", err);
+            res.status(500).send("Error occurred while fetching data.");
+            return;
+        }
+
+        // response 객체가 있을 때만 구조 분해 할당을 수행
+        const { statusCode } = response || {};
+        let data = [];
+
+        if (statusCode === 200 && Array.isArray(body) && body.length) {
+            data = body.map((item) => {
                 item.distance = formatDistance(item.distance);
                 return item;
-            })}
-            renderHomepage(req, res, data);
+            });
         }
-    );
-}
+
+        renderHomepage(req, res, data);
+    });
+};
 
 const getLocationInfo = (req,res,callback) => {
     const path = `/api/locations/${req.params.locationid}`;
