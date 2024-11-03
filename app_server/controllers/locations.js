@@ -113,16 +113,6 @@ const renderDetailPage = (req,res,location) => {
 const locationInfo = (req,res)=> {
     getLocationInfo(req,res,(req,res,responseData) => renderDetailPage(req,res,responseData))
 }
-request(requestOptions, (err, response, body) => {
-    if(err) {
-        console.log(err);
-    } if(response.statusCode === 200) {
-        console.log(body);
-    } else {
-        console.log(response.statusCode);
-    }
-})
-
 showError=(req,res,status) => {
     let title = '';
     let content = '';
