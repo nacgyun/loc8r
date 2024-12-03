@@ -42,20 +42,6 @@ app.use(express.static(path.join(__dirname, 'app_public')));
 app.use(express.static(path.join(__dirname, 'app_public', 'build')));
 app.use(passport.initialize());
 
-// CORS setup
-const allowedOrigins = ['http://localhost:4200', 'http://your-production-url.com'];
-app.use('/api', cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: 'GET,POST,PUT,DELETE,OPTIONS',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-}));
-
 // Routes
 app.use('/users', usersRouter);
 app.use('/api', apiRouter);
