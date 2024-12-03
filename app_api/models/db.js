@@ -16,11 +16,13 @@ mongoose.connection.on('error', err => {
 mongoose.connection.on('disconnected', () => {
  console.log('Mongoose disconnected');
 });
-const gracefulShutdown = (msg, callback) => {
- mongoose.connection.close( () => {
- console.log(`Mongoose disconnected through ${msg}`);
- callback();
- });
+const gracefulShutdown = async(msg) => {
+    try {
+        await mongoose.connection.close(); // 비동기적으로 연결 종료
+        console.log(`Mongoose disconnected through ${msg}`);
+    } catch (error) {
+        console.error(`Error during Mongoose disconnection: ${error}`);
+    }
 };
 // For nodemon restarts
 process.once('SIGUSR2', () => {
@@ -42,3 +44,4 @@ process.on('SIGTERM', () => {
 });
 
 require('./locations');
+require('./users')
